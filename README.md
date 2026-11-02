@@ -6,8 +6,10 @@ A browser-based tool for removing embedded C2PA metadata from JPEG, PNG, and Web
 
 Requires Node.js 20 or later.
 
+Replace `<path-to-repository>` with the path to your local checkout.
+
 ```powershell
-cd C:\Users\ADMIN\Documents\DANDANKOREA\remove_c2pa
+cd "<path-to-repository>"
 npm run dev
 ```
 
