@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Xóa C2PA nhúng khỏi JPEG, PNG, WebP ngay trong trình duyệt. Giữ định dạng gốc hoặc xuất JPG, không tải ảnh lên máy chủ.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'none'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="color-scheme" content="light">
+  <title>Clearframe · Xóa C2PA trên máy</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="./" class="brand" aria-label="Clearframe, trang chủ"><span class="brand-mark" aria-hidden="true">[c]</span>clearframe<span class="brand-period">.</span></a>
+    <a class="about-link" href="#about">Cách hoạt động <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="title">
+      <p class="eyebrow">CÔNG CỤ ẢNH CỤC BỘ</p>
+      <h1 id="title">Ảnh của bạn.<br><span>Bạn kiểm soát.</span></h1>
+      <p class="intro-copy">Xóa thông tin C2PA nhúng. Giữ ảnh gốc hoặc xuất JPG mới, ngay trong trình duyệt.</p>
+    </section>
+
+    <section class="workspace" aria-label="Xử lý ảnh">
+      <div class="workspace-main">
+        <div id="dropzone" class="dropzone">
+          <span class="drop-glyph" aria-hidden="true">↥</span>
+          <h2>Thả ảnh vào đây</h2>
+          <p>hoặc chọn ảnh từ thiết bị của bạn</p>
+          <button id="choose" class="button primary" type="button">Chọn ảnh <span aria-hidden="true">↗</span></button>
+          <input id="files" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" multiple hidden>
+          <span class="file-hint">JPEG, PNG, WEBP · Tối đa 50 MB/ảnh · 20 ảnh/lượt</span>
+        </div>
+
+        <div id="queue-panel" class="queue-panel" hidden>
+          <div class="queue-heading"><h2>Ảnh của bạn <span id="queue-count">0</span></h2><button id="clear" class="text-button" type="button">Xóa danh sách</button></div>
+          <ul id="queue" class="queue" aria-label="Danh sách ảnh"></ul>
+          <div class="queue-actions"><button id="process" class="button primary" type="button">Xử lý ảnh <span aria-hidden="true">→</span></button><button id="download-all" class="button secondary" type="button" hidden>Tải tất cả (.zip)</button></div>
+        </div>
+        <p id="notice" class="notice" role="status" aria-live="polite"></p>
+      </div>
+
+      <aside class="settings" aria-labelledby="settings-title">
+        <div class="settings-heading"><h2 id="settings-title">Cách xuất ảnh</h2><span class="local-badge">Trên thiết bị</span></div>
+        <fieldset id="mode-fieldset">
+          <legend class="sr-only">Chọn chế độ xử lý</legend>
+          <label class="mode-option"><input type="radio" name="mode" value="original" checked><span><strong>Giữ định dạng gốc</strong><small>Chỉ xóa khối C2PA nhúng. Không nén lại, giữ nền trong suốt.</small></span></label>
+          <label class="mode-option"><input type="radio" name="mode" value="jpeg"><span><strong>Xuất JPG mới</strong><small>Tạo ảnh mới từ pixel. Nền trong suốt chuyển thành trắng.</small></span></label>
+        </fieldset>
+        <div id="quality-group" class="quality-group" hidden><label for="quality">Chất lượng JPG <output id="quality-value" for="quality">95%</output></label><input id="quality" type="range" min="60" max="100" value="95"><p>JPG có nén mất dữ liệu. Ảnh động chỉ giữ một khung hình.</p></div>
+        <div class="privacy-note"><span aria-hidden="true">↳</span><p><strong>Ảnh ở lại trên máy bạn.</strong>Không tải lên máy chủ. Không tài khoản. Không lưu lịch sử.</p></div>
+      </aside>
+    </section>
+
+    <section id="preview" class="preview" aria-labelledby="preview-title" hidden>
+      <div class="preview-heading"><div><p class="eyebrow">KẾT QUẢ</p><h2 id="preview-title">Sẵn sàng cho bản tiếp theo.</h2></div><a id="preview-download" class="button primary" download>Tải ảnh xuống <span aria-hidden="true">↓</span></a></div>
+      <div class="comparison"><figure><div class="image-surface"><img id="before-image" alt="Ảnh trước khi xử lý"></div><figcaption><strong>Ảnh gốc</strong><span id="before-size"></span></figcaption></figure><figure><div class="image-surface"><img id="after-image" alt="Ảnh sau khi xử lý"></div><figcaption><strong>Sau xử lý</strong><span id="after-size"></span></figcaption></figure></div>
+      <div class="result-report"><span id="result-state" class="result-state"></span><p id="result-detail"></p></div>
+    </section>
+
+    <section id="about" class="about" aria-labelledby="about-title">
+      <h2 id="about-title">Xóa gì, giữ gì?</h2>
+      <div class="about-content"><p>C2PA là dữ liệu về nguồn gốc và lịch sử nội dung, được ký và có thể nhúng vào file ảnh. Clearframe loại bỏ phần dữ liệu nhúng này ở định dạng được hỗ trợ.</p><details><summary>Hai chế độ khác nhau thế nào?</summary><p>Giữ định dạng gốc: loại bỏ các khối chứa C2PA, giữ nguyên dữ liệu ảnh và metadata khác. Xuất JPG: giải mã và mã hóa lại từ pixel, không sao chép metadata gốc. Màu sắc và chất lượng có thể thay đổi khi xuất JPG.</p></details><details><summary>Kết quả kiểm tra có ý nghĩa gì?</summary><p>Công cụ đọc lại cấu trúc file đầu ra để kiểm tra các khối C2PA nhúng được hỗ trợ. Đây không phải xác minh chữ ký số. Các liên kết C2PA trong XMP, manifest bên ngoài, fingerprint và watermark vô hình không được xóa hoặc kiểm tra. Không có C2PA nhúng không đồng nghĩa ảnh không có nguồn gốc AI.</p></details><details><summary>Có thể xử lý ảnh nào?</summary><p>JPEG, PNG và WebP, tối đa 50 MB mỗi ảnh và 200 MB mỗi lượt. Chế độ giữ định dạng gốc bảo toàn dữ liệu hoạt ảnh PNG/WebP. Chế độ JPG hỗ trợ ảnh tối đa 40 megapixel và làm phẳng ảnh động. File có cấu trúc lỗi sẽ bị từ chối.</p></details></div>
+    </section>
+  </main>
+  <footer><span class="footer-brand">clearframe.</span><p>Quyền kiểm soát bắt đầu từ file của bạn.</p><a href="https://spec.c2pa.org/" target="_blank" rel="noopener noreferrer">Tìm hiểu C2PA ↗</a></footer>
+</body>
+</html>

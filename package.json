@@ -1,0 +1,16 @@
+{
+  "name": "remove-c2pa",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Browser-local C2PA removal for JPEG, PNG and WebP",
+  "scripts": {
+    "dev": "node scripts/serve.mjs public",
+    "build": "node scripts/build.mjs",
+    "start": "node scripts/serve.mjs dist",
+    "test": "node --test test/c2pa.test.js test/fixtures.test.js",
+    "fixtures": "node scripts/fixtures.mjs",
+    "test:browser": "node scripts/serve.mjs public --qa"
+  },
+  "engines": { "node": ">=20" }
+}
